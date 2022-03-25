@@ -7,5 +7,4 @@ CommitName=char(datetime('now'));
 % My zhibin bash script — repo token: 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
 % https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/
 % https://techglimpse.com/git-push-github-token-based-passwordless/
-% 
-!git push https://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@github.com/zhibinz2/1overf.git
+!git push https://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/zhibinz2/1overf.git
