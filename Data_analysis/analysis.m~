@@ -187,7 +187,7 @@ open /ssd/zhibin/1overf/20220324/explore_1_over_f.m
 
 SupTitles={'Synchronization' 'Randomization'};
 
-for i=1:2 % i=2;
+for i=1:2
     if i==1
         y=SynError;
     else
@@ -196,8 +196,7 @@ for i=1:2 % i=2;
     
     F=fft(y);
     p=abs(F).^2;
-    Fs=1/2;% assuming a sampling frequency of 0.5Hz (2 second per sample)
-    freqs=linspace(0,Fs/2,length(y)/2+1);
+    freqs=linspace(0,0.2/2,length(y)/2+1);
 
     % plot(log10(freqs),log10(p(1:length(freqs))));
     % xlabel('log of frequency(Hz)');
@@ -210,16 +209,13 @@ for i=1:2 % i=2;
 
     % 3 plots
     figure('units','normalized','outerposition',[0 0 0.4 0.6]);
-    
     subplot(1,3,1);
     plot(y);
-    xlabel('Trial');ylabel('Error(sec.)');title('A. Time Series');
-    
+    xlabel('Trial');ylabel('Err(sec.)');title('A. Time Series');
     subplot(1,3,2);
-    autocorr(y,'NumLags',200,'NumSTD',2);
+    autocorr(RTs(ConditionExplore),'NumLags',25,'NumSTD',2);
     % [acf,lags,bounds] = autocorr(RTs(ConditionExplore),'NumLags',25,'NumSTD',2);
     xlabel('Lag');ylabel('Corr.');title('B. Autocorr.');
-    
     subplot(1,3,3);
     xx=log10(freqs(2:end));yy=log10(p(2:length(freqs)));
     plot(xx,yy);hold on;
@@ -227,8 +223,5 @@ for i=1:2 % i=2;
     mdl=fitlm(tbl,'linear');
     plotAdded(mdl);
     xlabel('Log(f)');ylabel('Log(power)');title('C. Spectrum');
-    
-    suptitle(char(SupTitles(i)));
-end
 
 
