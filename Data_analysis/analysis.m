@@ -28,8 +28,6 @@ for i=1:length(channels)
     labels(i)=channels{i}.alternative_name;
     units(i)=channels{i}.unit_name;
 end
-altertive_names
-unit_names
 channels_info=table(numbers,labels,units)
 
 % Create time stamps
@@ -58,7 +56,6 @@ cd /ssd/zhibin/1overf/20220324
 [file, pathname] = uigetfile({'*.Poly5';'*.S00';'*.TMS32'},'Pick your file');
 [path,filename,extension] = fileparts(file);
 open Poly5toEEGlab
-Plot a single channel.
 
 % Step 2: Plot a single channel.
 plot((0:(d.num_samples - 1)) / d.sample_rate, d.samples(2, :));
@@ -77,7 +74,7 @@ eegdataset = toEEGLab(d, ChanLocs);
 pop_saveset(eegdataset,'filename',filename,'filepath',pathname)
 disp(['Data saved as EEGlab dataset (.set) in this folder: ',pathname])
 
-%% load behaviral data
+%% load stimulus data
 cd /home/zhibin/Documents/GitHub/1overf/stimulus_data_storage
 load('20220324.mat')
 
@@ -92,12 +89,19 @@ open /home/zhibin/Documents/GitHub/Motor_cordination/EEGanalysis/20211102/organi
 
 % for photocell
 % view the time course of photocell signals
-plot(Photocell);xlabel('time');ylabel('photocell signal');
+figure('units','normalized','outerposition',[0 0 1 0.3]);
+plot(Photocell');xlabel('time');ylabel('photocell signal');
+% plot EEG on top
+% hold on; plot(time',samples(2:33,:)'); % it zoom out the phtocell amplitude, too small to see
 % click and select the start and end point for peak extraction
-[x, ~] = ginput(2); % read two mouse clicks on the plot
-Startpoint=round(x(1));Endpoint=round(x(2));
-analog1data=Photocell(Startpoint:Endpoint);
-datatimes=time(Startpoint:Endpoint);
+[x, y] = ginput(2); % read two mouse clicks on the plot % x were index, y were real values
+Startpoint=round(x(1));Endpoint=round(x(2)); % Startpoint and Endpoint are sample number or index in time
+
+% replace the beginning and end with baseline value
+Photocell(1:Startpoint)=mean(y);Photocell(Endpoint:end)=mean(y); % plot(Photocell');
+
+analog1data=Photocell; 
+datatimes=time;
 plot(datatimes,analog1data,'b'); 
 
 % Examine peaks detection in analog1
@@ -147,7 +151,7 @@ plot(1:length(diff(BottonPresTimeInd)), diff(BottonPresTimeInd),'ro');
 xlabel('key press');ylabel('Intervals (ms)');
 
 %% Compare photocell amd botton presses timing
-PhotocellTime=locs;
+PhotocellTime=locs; % locs are values in datatimes
 BottonPressTime=datatimes(BottonPresTimeInd);
 
 % view and compare
