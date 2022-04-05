@@ -321,7 +321,7 @@ try
             end
 
             % show instruction for each trial / condition
-            ShowCondition=['Beginig ' conditionNames{conditionSelected} ' condition'];
+            ShowCondition=[conditionNames{conditionSelected}];
             DrawFormattedText2(ShowCondition,'win',windowPtr,...
             'sx','center','sy', 'center','xalign','center','yalign','top','baseColor',color);
             Screen('Flip', windowPtr);

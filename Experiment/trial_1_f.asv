@@ -11,6 +11,12 @@ while n < numFrames
         Screen('CloseAll');
         break;
     end
+        
+    % show instruction for each trial / condition with different color
+    DrawFormattedText2(conditionNames{conditionSelected},'win',windowPtr,...
+    'sx','center','sy', screenYpixels*0.9,'xalign','center','yalign','top','baseColor',color);
+    % show cross with different color
+    Screen('DrawDots', windowPtr, [FixCrX;FixCrY], screenXpixels/400, color, [0 0], 2);
 
     % Update the while loop with time
 %     numberOfSecondsElapsed = (now - startTime) * 10 ^ 5;
@@ -38,20 +44,30 @@ while n < numFrames
     % Flash photocell every other second during the whole trial (bottom left)
     if (~isempty(find(([1:2:numFrames]==n)))) % every two frames
     Screen('FillRect', windowPtr, white, LeftBottomSquare);
+    Screen('FillRect', windowPtr, white, LeftUpperSquare); % event type = 1200002
     end
     
     % ******#################################
     % Flash photocells at start&end of each trial/condition (upper left)
-    if n == 1 | numFrames
-    Screen('FillRect', windowPtr, white, LeftUpperSquare); % event type = 1200002
-    end
+%     if n == 1 | n == numFrames
+%     Screen('FillRect', windowPtr, white, LeftUpperSquare); % event type = 1200002
+%     end
 
     % show stimulus and photocells on the right at the same time
     if any(Showframeselected(:) == n)
         % Show the fixation cross
-        Screen('DrawDots', windowPtr, [FixCrX;FixCrY], screenXpixels/300, white, [0 0], 2);
+        Screen('DrawDots', windowPtr, [xCenter;yCenter], screenXpixels/30, color, [0 0], 2);
         Screen('FillRect', windowPtr, white, RightUpperSquare);  % event type = 1200001
         Screen('FillRect', windowPtr, white, RightBottomSquare);
+    end
+    % show noise stimulus
+    if conditionSelected ==3
+        if any(Showframeselected(:) == n)
+            % Show the fixation cross
+            Screen('DrawDots', windowPtr, [xCenter;yCenter], screenXpixels/30, color, [0 0], 2);
+            Screen('FillRect', windowPtr, white, RightUpperSquare);  % event type = 1200001
+            Screen('FillRect', windowPtr, white, RightBottomSquare);
+        end
     end
 
     % Flip to the screen

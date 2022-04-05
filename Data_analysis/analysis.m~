@@ -128,7 +128,7 @@ yline(Halfhigh1,'m','MinPeakProminence');
 
 % examine pks and locs (both are values of analog1data and datatimes, not indices)
 % i=1;
-% find(Photocell==pks(i)) % return the index of peak in time
+% find(analog1data==pks(i)) % return the index of peak in analog1data
 % find(datatimes==locs(i)) % return the same "index" in datatimes (ie, i=1, index=4226)
 % so, infer from above, beacause the above "find values" for the same "index" works
 % pks are values in analog1data
@@ -167,7 +167,7 @@ title('Differences of Time indices for botton presses');
 % use a threshold to segment conditions
 threshold2=max(diff(BottonPresTimeInd))/2; hold on; yline(threshold2,'m'); % show on top of previous plot
 separationsInd=find(diff(BottonPresTimeInd)>threshold2); % indices of the first button press from the second condition in BottonPresTimeInd
-separationsInd=[1;separationsInd+1]; %  indices from the first button press in each condition in BottonPresTimeInd
+separationsInd=[1;separationsInd]; %  indices from the first button press in each condition in BottonPresTimeInd
 separationsTimeInd=BottonPresTimeInd(separationsInd);% indices in time 
 
 % plot to examine
@@ -176,7 +176,6 @@ plot(time,Photocell);xlabel('time');ylabel('photocell signal');
 hold on; xline(time(separationsTimeInd(1)),'r');
 xline(time(separationsTimeInd(2)),'r');
 xline(time(separationsTimeInd(3)),'r');hold off;
-
 %% Compare photocell amd botton presses timing
 PhotocellTime=locs; % locs are values in datatimes
 BottonPressTime=datatimes(BottonPresTimeInd);

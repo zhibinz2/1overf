@@ -576,11 +576,6 @@ EEG_syncopation=mixedsig(:,PhotocellTimeInd(5):PhotocellTimeInd(244))';
 EEG_randomization=mixedsig(:,PhotocellTimeInd(245):PhotocellTimeInd(484))';
 EEG_synchronization=mixedsig(:,PhotocellTimeInd(485):PhotocellTimeInd(724))';
 
-cd /ssd/zhibin/1overf/20220331
-save('segmented_clean_Data.mat','EEG_eye_open_resting','EEG_eye_close_resting',...
-    'EEG_syncopation','EEG_randomization','EEG_synchronization');
-
-
 
 EEG_trials=zeros(size(mixedsig'));
 events=[];
