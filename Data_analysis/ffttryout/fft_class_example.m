@@ -169,3 +169,6 @@ time = [dt:dt:T]; %time at which each sample is taken
 theta = theta*pi/180; %convert theta to radians
 sinewave = A*cos(2*pi*f*time+theta); %build the sine wave
 plot(time,sinewave,'g')
+
+
+
