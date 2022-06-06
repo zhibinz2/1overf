@@ -31,14 +31,34 @@ subplot(2,1,2);plot(timeR,filtered_EMGR,'b'); title('filtered_EMGR');
 np = 50; % N-tap Hilbert filter
 [upL,loL] = envelope(filtered_EMGL,np,'peak');
 [upR,loR] = envelope(filtered_EMGR,np,'peak');
+
 close;figure('units','normalized','outerposition',[0 0 1 0.6]);
 subplot(2,1,1);
-plot(timeL,filtered_EMGL,'g');
-hold on; plot(timeL,upL,'r');
+plot(filtered_EMGL,'g');
+hold on; plot(upL,'r');
 ylim([-1000 1000]);title(['np = ' num2str(np)]); % xlim([1000 1100]);
 hold off;
 subplot(2,1,2);
-plot(timeR,filtered_EMGR,'g');
-hold on; plot(timeR,upR,'r');
+plot(filtered_EMGR,'g');
+hold on; plot(upR,'r');
+ylim([-1000 1000]);title(['np = ' num2str(np)]); % xlim([1000 1100]);
+hold off;
+% selet two point on x axis to zoom in
+[x, ~] = ginput(2); % read two mouse clicks on the plot % x were index, y were real values
+% get the proximate index
+string(x)
+ind1=round(x(1))
+ind2=round(x(2))
+
+% zoom in and plot again
+figure('units','normalized','outerposition',[0 0 1 0.6]);
+subplot(2,1,1);
+plot(filtered_EMGL(ind1:ind2),'g');
+hold on; plot(upL(ind1:ind2),'r');
+ylim([-1000 1000]);title(['np = ' num2str(np)]); % xlim([1000 1100]);
+hold off;
+subplot(2,1,2);
+plot(filtered_EMGR(ind1:ind2),'g');
+hold on; plot(upR(ind1:ind2),'r');
 ylim([-1000 1000]);title(['np = ' num2str(np)]); % xlim([1000 1100]);
 hold off;
