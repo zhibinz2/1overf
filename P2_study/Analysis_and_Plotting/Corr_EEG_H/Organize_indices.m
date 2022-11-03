@@ -20,7 +20,7 @@ condition_all=reshape(condition_all',[],1); % 144 x 1
 states4names={'Uncouple','Leading','Following','Mutual'};
 
 % find the indices for each state in the L&R subject conbined sequence (4 states)
-% organize the indicies for PLS
+% organize the indicies for PLS and correlation
 uncoupleInd_LR=[find(condition_all==1);12*numSes+find(condition_all==1)];
 leadingInd_LR=[find(condition_all==2);12*numSes+find(condition_all==3)];
 followingInd_LR=[find(condition_all==3);12*numSes+find(condition_all==2)];

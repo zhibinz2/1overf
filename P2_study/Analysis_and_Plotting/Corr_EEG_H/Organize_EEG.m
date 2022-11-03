@@ -2,8 +2,6 @@
 seeds=[20220713;20220721;20220804;20220808;20220810;20220811;20220815;20220816;20221003;2022100401;
         2022100402;20221005];
 numSes=size(seeds,1);
-sessions={'synch','synco','synch','synco','synch','synco','synch','synco','synch','synco',...
-    'synch','synco'};
 EEGwin=0.5; % second
 
 % EEG -500ms before the matched tap
@@ -36,7 +34,8 @@ toc % about 2 min
 zEEG500_L; zEEG500_R; % for all sessions from SECT 12
 delta_L;theta_L;alpha_L;beta_L;gamma_L;
 delta_R;theta_R;alpha_R;beta_R;gamma_R;
-% sum the band power in each channel in each block (8x12=96)
+
+% sum the band power in each channel in each block (12session x 12blocks = 144)
 delta_L_sum=[];theta_L_sum=[];alpha_L_sum=[];beta_L_sum=[];gamma_L_sum=[];
 delta_R_sum=[];theta_R_sum=[];alpha_R_sum=[];beta_R_sum=[];gamma_R_sum=[];
 for s=1:numSes
@@ -53,6 +52,7 @@ for s=1:numSes
         gamma_R_sum(s,b,:)=sum([gamma_R{s,b}]);
     end
 end
+
 % squeeze into 32 vectors for corr with H
 delta_L_chan=[];theta_L_chan=[];alpha_L_chan=[];beta_L_chan=[];gamma_L_chan=[];
 delta_R_chan=[];theta_R_chan=[];alpha_R_chan=[];beta_R_chan=[];gamma_R_chan=[];
@@ -68,14 +68,16 @@ for c=1:32
     beta_R_chan(:,c)=reshape(beta_R_sum(:,:,c)',[],1);
     gamma_R_chan(:,c)=reshape(gamma_R_sum(:,:,c)',[],1);
 end
+
 % Combine L and R for 288 predictors in PLS
 delta_LR_chan=[delta_L_chan;delta_R_chan]; % (288 x 32)
 theta_LR_chan=[theta_L_chan;theta_R_chan];
 alpha_LR_chan=[alpha_L_chan;alpha_R_chan];
 beta_LR_chan=[beta_L_chan;beta_R_chan];
 gamma_LR_chan=[gamma_L_chan;gamma_R_chan];
-% fix the scale in the data (as in PLOT 16, now skiped in PLOT 16)
-delta_LR_chan = delta_LR_chan./(ones(288,1)*std(delta_LR_chan)); %organized in PLOT 13
+
+% fix the scale in the data 
+delta_LR_chan = delta_LR_chan./(ones(288,1)*std(delta_LR_chan)); 
 theta_LR_chan = theta_LR_chan./(ones(288,1)*std(theta_LR_chan));
 alpha_LR_chan = alpha_LR_chan./(ones(288,1)*std(alpha_LR_chan));
 beta_LR_chan = beta_LR_chan./(ones(288,1)*std(beta_LR_chan));
