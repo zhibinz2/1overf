@@ -1,4 +1,5 @@
 % Organize the data needed for the analysis
+addpath functions/
 run Organize_EEG.m
 run Organize_H.m
 run Organize_indices.m
