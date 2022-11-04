@@ -34,10 +34,8 @@ toc % about 2 min
 zEEG500_L; zEEG500_R; % for all sessions from SECT 12
 delta_L;theta_L;alpha_L;beta_L;gamma_L;
 delta_R;theta_R;alpha_R;beta_R;gamma_R;
-
-% save these EEG power from each tap
-save('20220713_1005_EEG_5band_pow_taps.mat','delta_L','theta_L','alpha_L','beta_L','gamma_L',...
-    'delta_R','theta_R','alpha_R','beta_R','gamma_R');
+% save these EEG power
+save('')
 
 % sum the band power in each channel in each block (12session x 12blocks = 144)
 delta_L_sum=[];theta_L_sum=[];alpha_L_sum=[];beta_L_sum=[];gamma_L_sum=[];
