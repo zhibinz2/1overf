@@ -19,6 +19,10 @@ for s=1:numSes
         end
 end
 toc % Elapsed time is 0.055227 seconds.
+% Z-score across 72 values of power.
+for st=1:4
+    condi_pow_all{st}=zscore(condi_pow_all{st},0,3);
+end
 % get average pow for each state
 avg_state_pow=nan(4,51,32); % 4 state x 51 freq x 32 chan
 for st=1:4
