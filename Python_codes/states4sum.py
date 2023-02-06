@@ -1,5 +1,5 @@
 
-#%%
+#%% import modules
 from os import listdir
 
 from hdf5storage import loadmat, savemat 
@@ -9,30 +9,32 @@ from matplotlib import pyplot as plt
 from scipy import signal, stats
 from scipy.fftpack import fft
 
-#%%
+#%% 
 states4names=['Uncoupled','Leading','Following','Mutual']
 from zzpackage.zzmodule import Zclass
 dir='Cleaned_data/'
-# %%
+
+# %% file loading sequence
 # organize conditions in all sessions into a vector of 192
 filedates=[20220713,20220721,20220804,20220808,20220810,20220811,20220815,20220816,20221003,2022100401,2022100402,20221005]
 numSes=len(filedates)
-#%% Organize indicies of the conditions sequentially
 
-conditions_all=[]
-from zzpackage.zzmodule import Zclass
-for i in range(len(filedates)): # in time sequence    
-    filename='clean_'+str(filedates[i])+'.mat' 
-    _, _,_,_,conditions,_,_,_,_,_,_,_,sr = Zclass.loadmatvar2(dir,filename) 
-    conditions_all.append(conditions)
+#%% Organize indicies of the conditions sequentially
+# conditions_all=[]
+# from zzpackage.zzmodule import Zclass
+# for i in range(len(filedates)): # in time sequence    
+#     filename='clean_'+str(filedates[i])+'.mat' 
+#     _, _,_,_,conditions,_,_,_,_,_,_,_,sr = Zclass.loadmatvar2(dir,filename) 
+#     conditions_all.append(conditions)
 
 # %% save conditions_all and load it
 # outdict=dict()
 # outdict['conditions_all']=conditions_all
 # savemat('conditions_all',outdict,store_python_metadata=True)
-# outdict=loadmat('conditions_all.mat')
-# conditions_all=outdict["conditions_all"]
-# %%
+outdict=loadmat('conditions_all.mat')
+conditions_all=outdict["conditions_all"]
+
+# %% Organize indicies for the 4 states
 Uncoupled_Ind=np.zeros((12,3))
 L_Lead_Ind=np.zeros((12,3)) # they were leading indicies for L subject but following for R
 R_Lead_Ind=np.zeros((12,3))
@@ -44,34 +46,37 @@ for ses in range(12):
     Mutual_Ind[ses]=np.asarray(np.where(conditions_all[ses]==4))
 
 # %% load pacorr_mat
-pacorr_all=np.zeros((12,2,12,30,32,32))
-for ses in range(12):
-	filename='clean_'+str(filedates[ses])+'_pcorr.mat'
-	outdict=loadmat('pcorr/'+filename)
-	partial_correlation=outdict['partial_correlation']
-	for subj in range(2):
-		for trl in range(12):			
-			for freq in range(30):
-				pacorr_all[ses][subj][trl][freq,:,:]=partial_correlation[subj][trl][freq,:,:]
+# pacorr_all=np.zeros((12,2,12,30,32,32))
+# for ses in range(12):
+# 	filename='clean_'+str(filedates[ses])+'_pcorr.mat'
+# 	outdict=loadmat('pcorr/'+filename)
+# 	partial_correlation=outdict['partial_correlation']
+# 	for subj in range(2):
+# 		for trl in range(12):			
+# 			for freq in range(30):
+# 				pacorr_all[ses][subj][trl][freq,:,:]=partial_correlation[subj][trl][freq,:,:]
 
 #%% save pacorr_all and load it
 # outdict=dict()
 # outdict['pacorr_all']=pacorr_all
 # savemat('pacorr_all.mat',outdict,store_python_metadata=True)			
-# dict=loadmat('pacorr_all.mat')
-# pacorr_all=dict['pacorr_all']
+dict=loadmat('pacorr_all.mat')
+pacorr_all=dict['pacorr_all']
 
-# %%
-nonzerosmat=np.zeros((12,2,12,30,32,32))
-for ses in range(12):
-	for subj in range(2):
-		for trl in range(12):			
-			for freq in range(30):
-				nonzerosmat[ses][subj][trl][freq,:,:]\
-					=(pacorr_all[ses][subj][trl][freq,:,:]>0.1)*1\
-                        +(pacorr_all[ses][subj][trl][freq,:,:]<-0.1)*-1
+# %% extract non zero matricies by thresholding
+# nonzerosmat=np.zeros((12,2,12,30,32,32))
+# for ses in range(12):
+# 	for subj in range(2):
+# 		for trl in range(12):			
+# 			for freq in range(30):
+# 				nonzerosmat[ses][subj][trl][freq,:,:]\
+# 					=(pacorr_all[ses][subj][trl][freq,:,:]>0.1)*1\
+#                         +(pacorr_all[ses][subj][trl][freq,:,:]<-0.1)*-1
+
+# %% no need for thresholding
+nonzerosmat=pacorr_all
 			
-# %%
+# %% append the same state together
 # append all the Uncoupled_Ind nozeromat in the same state
 append_Uncoupled=list(); append_Mutual=list()
 # append_L_Lead=list(); append_R_Lead=list(); 
@@ -102,7 +107,9 @@ for trl in range(72):
     sum_Leading[:,:,:]=sum_Leading[:,:,:]+append_Leading[trl][:,:,:]
     sum_Following[:,:,:]=sum_Following[:,:,:]+append_Following[trl][:,:,:]
     sum_Mutual[:,:,:]=sum_Mutual[:,:,:]+append_Mutual[trl][:,:,:]
-# %%    
+
+
+# %%  names for the 4 states  
 sum_4states=[sum_Uncoupled,sum_Leading,sum_Following,sum_Mutual]
 
 # %% plot the figures and save in pdf
@@ -114,7 +121,7 @@ figure,axs = plt.subplots(30,4,constrained_layout=True)
 for state in range(4):
 	for freq in range(30):
 		im=axs[freq,state].imshow(sum_4states[state][freq,:,:],\
-					vmin=-20,vmax=20,cmap='jet')#RdBu_r viridis
+					vmin=-2,vmax=2,cmap='jet')#RdBu_r viridis
 		axs[freq,state].set_title(states4names[state]+' freq: '+str(freq+1)+' Hz')
 		figure.colorbar(im, ax=axs[freq,state])
 
@@ -133,7 +140,6 @@ for state in range(4):
     for freq in range(30):    
         tmp[freq]=np.sum(sum_4states[state][freq,:,:])-(72*32)
     sum_4states_list[states4names[state]]=tmp
-
 
 
 # %%
@@ -158,4 +164,14 @@ print(myTable)
 # print to txt file
 with open('state4sum.txt', 'w') as w:
     w.write(str(myTable))
-# %%
+
+
+#%% plot verus freq
+plt.rcParams['figure.figsize']=[3, 3]
+for state,color in enumerate(['green','red','blue','black']):
+    plt.plot(range(30),sum_4states_list[states4names[state]],color)
+    plt.xlim(1,30);plt.ylim(-1250,-600)
+    plt.xlabel("frequency (Hz)");plt.ylabel("non zero sum")
+plt.legend(states4names)
+plt.show()
+
