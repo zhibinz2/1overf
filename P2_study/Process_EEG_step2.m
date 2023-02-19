@@ -11,8 +11,8 @@ subplot(2,1,1);plot(samplesL(28,:)');
 subplot(2,1,2);plot(samplesR(28,:)');
 
 %% Extract EEG
-EEGL=samplesL(1:32,:)';
-EEGR=samplesR(1:32,:)';
+EEGL=samplesL(1:32,20000:200000)';
+EEGR=samplesR(1:32,20000:200000)';
 
 %% detrend the EEG data (no padding needed)
 detrend_dataL=detrend(EEGL,2);

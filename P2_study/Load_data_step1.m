@@ -1,3 +1,4 @@
+
 %% load TMSi data
 clear;close all;
 addpath /home/zhibin/Documents/GitHub/Motor_cordination/1_over_f/data_analysis/2P_testing;
@@ -5,6 +6,7 @@ cd /ssd/zhibin/1overf/20220515_2P
 cd /ssd/zhibin/1overf/20220517_2P
 cd /ssd/zhibin/1overf/20220518_2P
 % add "https://github.com/zhibinz2/TMSi_SAGA_matlab/" to your path
+addpath(genpath('/home/zhibinz2/Documents/GitHub/TMSi_SAGA_matlab'))
 
 [EEGfileNameL]=uigetfile('*.Poly5');% select the Left player EEG
 Path_filenameL=[pwd '/' EEGfileNameL];
